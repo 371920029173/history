@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import styles from './page.module.css'
 import RichTextEditor from '@/components/RichTextEditor'
-import { supabase, imagesBucket } from '@/lib/supabase'
 
 export default function CreatePage() {
   const router = useRouter()
@@ -32,22 +31,27 @@ export default function CreatePage() {
     }
 
     try {
-      // 1) 若有图片文件，先上传到 Supabase 存储，获取公开 URL 数组
       const uploadedUrls: string[] = []
       if (files && files.length > 0) {
         for (let i = 0; i < files.length; i++) {
           const file = files[i]
-          const path = `${Date.now()}-${Math.random().toString(36).slice(2)}-${file.name}`
-          const { error: uploadError } = await supabase.storage
-            .from(imagesBucket)
-            .upload(path, file, { cacheControl: '3600', upsert: false })
+          const formData = new FormData()
+          formData.append('file', file)
 
-          if (uploadError) {
-            throw uploadError
+          const uploadResponse = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData,
+          })
+
+          if (!uploadResponse.ok) {
+            const errorData = await uploadResponse.json()
+            throw new Error(errorData.error || 'Failed to upload image')
           }
 
-          const { data } = supabase.storage.from(imagesBucket).getPublicUrl(path)
-          if (data?.publicUrl) uploadedUrls.push(data.publicUrl)
+          const uploadResult = await uploadResponse.json()
+          if (uploadResult.url) {
+            uploadedUrls.push(uploadResult.url)
+          }
         }
       }
 
