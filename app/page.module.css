@@ -24,7 +24,7 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  opacity: 0.85; /* 饱和度 85% */
+  opacity: 1;
   animation: fadeIn 1s ease-in;
   /* 渐变消失效果 - 从底部渐渐变淡 */
   mask-image: linear-gradient(
@@ -52,9 +52,9 @@
   height: 450px; /* 与背景图片高度一致 */
   background: linear-gradient(
     to bottom,
-    rgba(255, 255, 255, 0.3) 0%,
-    rgba(255, 255, 255, 0.4) 50%,
-    rgba(255, 255, 255, 0.6) 100%
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.2) 100%
   );
   z-index: 1;
   will-change: opacity;
@@ -66,7 +66,7 @@
     opacity: 0;
   }
   to {
-    opacity: 0.85;
+    opacity: 1;
   }
 }
 
@@ -91,7 +91,7 @@
   font-size: 3rem;
   font-weight: 700;
   color: #1a1a1a;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  text-shadow: 2px 2px 8px rgba(255, 255, 255, 0.8), 0 0 10px rgba(255, 255, 255, 0.5);
   margin: 0 auto;
   text-align: center;
   flex: 1 1 100%;
@@ -123,6 +123,8 @@
   border: 2px solid #ddd;
   border-radius: 8px;
   font-size: 1rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
 }
 
 .communityRow {
@@ -133,6 +135,7 @@
   color: #667eea;
   font-weight: 600;
   text-decoration: underline;
+  text-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
 }
 
 .createButton {
@@ -190,6 +193,7 @@
   color: #666;
   font-size: 1.2rem;
   animation: fadeIn 0.5s ease-out;
+  text-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
 }
 
 @keyframes fadeIn {
