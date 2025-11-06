@@ -2,7 +2,9 @@ name = "history-website"
 compatibility_date = "2024-01-01"
 
 # Pages 项目配置
-pages_build_output_dir = ".next"
+# 注意：Cloudflare Pages 使用 @cloudflare/next-on-pages 的输出目录
+# 实际输出在 .vercel/output/static，但这里需要指向 next-on-pages 的输出
+pages_build_output_dir = ".vercel/output/static"
 
 # 环境变量配置
 # 所有环境变量都配置在这里，包括敏感变量
