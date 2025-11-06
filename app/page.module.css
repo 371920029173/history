@@ -19,13 +19,26 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 60vh; /* 减小高度，不占满整个页面 */
   background-image: url('/background.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  opacity: 0.2;
+  opacity: 0.4; /* 提高可见度 */
   animation: fadeIn 2s ease-in;
+  /* 渐变消失效果 - 从底部渐渐变淡 */
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.8) 50%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.8) 50%,
+    rgba(0, 0, 0, 0) 100%
+  );
 }
 
 .backgroundOverlay {
@@ -33,11 +46,11 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 60vh; /* 与背景图片高度一致 */
   background: linear-gradient(
     to bottom,
-    rgba(255, 255, 255, 0.75) 0%,
-    rgba(255, 255, 255, 0.85) 50%,
+    rgba(255, 255, 255, 0.6) 0%,
+    rgba(255, 255, 255, 0.7) 50%,
     rgba(255, 255, 255, 0.9) 100%
   );
   z-index: 1;
@@ -48,7 +61,7 @@
     opacity: 0;
   }
   to {
-    opacity: 0.2;
+    opacity: 0.4;
   }
 }
 
