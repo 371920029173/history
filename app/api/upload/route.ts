@@ -1,7 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getSupabaseAdmin, imagesBucket } from '@/lib/supabase'
+import { createClient } from '@supabase/supabase-js'
 
 export const runtime = 'edge'
+
+const imagesBucket = process.env.NEXT_PUBLIC_SUPABASE_BUCKET || 'history-images'
+
+function getSupabaseAdmin() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  if (!url || !key) {
+    throw new Error('Supabase环境变量未配置')
+  }
+
+  return createClient(url, key.trim(), {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+      detectSessionInUrl: false
+    }
+  })
+}
 
 export async function POST(request: NextRequest) {
   try {

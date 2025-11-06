@@ -1,8 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getSupabaseAdmin } from '@/lib/supabase'
+import { createClient } from '@supabase/supabase-js'
 import { verifyDeleteKey } from '@/lib/crypto'
 
 export const runtime = 'edge'
+
+function getSupabaseAdmin() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  if (!url || !key) {
+    throw new Error('Supabase环境变量未配置')
+  }
+
+  return createClient(url, key.trim(), {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+      detectSessionInUrl: false
+    }
+  })
+}
 
 // GET: 获取单个历史记录
 export async function GET(

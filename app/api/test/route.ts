@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getSupabaseAdmin } from '@/lib/supabase'
+import { createClient } from '@supabase/supabase-js'
 
 export const runtime = 'edge'
 
@@ -8,8 +8,28 @@ export async function GET() {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
     const hasAnonKey = !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
     const hasServiceKey = !!process.env.SUPABASE_SERVICE_ROLE_KEY
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
-    const supabaseAdmin = getSupabaseAdmin()
+    if (!supabaseUrl || !serviceRoleKey) {
+      return NextResponse.json({
+        success: false,
+        error: 'Supabase环境变量未配置',
+        config: {
+          hasUrl: !!supabaseUrl,
+          hasAnonKey,
+          hasServiceKey,
+        },
+      }, { status: 500 })
+    }
+
+    const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey.trim(), {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+        detectSessionInUrl: false
+      }
+    })
+
     const testQuery = await supabaseAdmin
       .from('history_entries')
       .select('id')
