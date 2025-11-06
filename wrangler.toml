@@ -1,5 +1,6 @@
 name = "history-website"
 compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
 
 # Pages 项目配置
 # 注意：Cloudflare Pages 使用 @cloudflare/next-on-pages 的输出目录
