@@ -1,0 +1,15 @@
+name = "history-website"
+compatibility_date = "2024-01-01"
+
+# Pages 项目配置
+pages_build_output_dir = ".next"
+
+# 环境变量配置
+# 所有环境变量都配置在这里，包括敏感变量
+# 如果 Cloudflare Pages 不支持从 wrangler.toml 读取所有变量，可以在 Dashboard 中手动填写
+[vars]
+NEXT_PUBLIC_SUPABASE_URL = "https://ahxeskrdezaahhbftonn.supabase.co"
+NEXT_PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFoeGVza3JkZXphYWhoYmZ0b25uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI0MzcyNTksImV4cCI6MjA3ODAxMzI1OX0.Hd1xC8Xws3kkMvq93enw8ZBWASiZgApzBqjBy1DSVRU"
+NEXT_PUBLIC_SUPABASE_BUCKET = "history-images"
+SUPABASE_SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFoeGVza3JkZXphYWhoYmZ0b25uIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MjQzNzI1OSwiZXhwIjoyMDc4MDEzMjU5fQ.gJ0xkRCjUtKLE0mN9bur8RAS7m_YolusS1BZAVY44Jo"
+
