@@ -4,7 +4,7 @@ import './globals.css'
 
 const inter = Inter({ 
   subsets: ['latin'],
-  display: 'swap', // 优化字体加载
+  display: 'swap',
   preload: true,
 })
 
@@ -21,7 +21,6 @@ export default function RootLayout({
   return (
     <html lang="zh-CN">
       <head>
-        {/* 预加载背景图片 */}
         <link rel="preload" href="/background.jpg" as="image" />
       </head>
       <body className={inter.className}>{children}</body>

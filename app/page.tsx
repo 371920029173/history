@@ -1,12 +1,9 @@
 'use client'
 
-import { useEffect, useState, useMemo, Suspense } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { HistoryEntry } from '@/lib/types'
 import styles from './page.module.css'
-
-// 使用 React.lazy 进行代码分割（如果需要）
-// const LazyComponent = React.lazy(() => import('./SomeComponent'))
 
 export default function Home() {
   const [entries, setEntries] = useState<HistoryEntry[]>([])
@@ -14,7 +11,6 @@ export default function Home() {
   const [query, setQuery] = useState('')
 
   useEffect(() => {
-    // 使用 requestIdleCallback 优化加载时机（如果支持）
     const fetchData = () => {
       fetchEntries()
     }
@@ -22,20 +18,17 @@ export default function Home() {
     if ('requestIdleCallback' in window) {
       requestIdleCallback(fetchData, { timeout: 2000 })
     } else {
-      // 降级方案：使用 setTimeout
       setTimeout(fetchData, 0)
     }
   }, [])
 
   const fetchEntries = async () => {
     try {
-      // 使用 AbortController 优化请求
       const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 10000) // 10秒超时
+      const timeoutId = setTimeout(() => controller.abort(), 10000)
       
       const response = await fetch('/api/entries', {
         signal: controller.signal,
-        // 添加缓存头
         cache: 'default',
       })
       
@@ -71,7 +64,6 @@ export default function Home() {
     if (a === b) return 1000
     const idx = a.indexOf(b)
     if (idx === -1) return 0
-    // 位置越靠前分越高，匹配越短相对更高
     return 500 - idx * 5 + Math.max(0, 50 - Math.abs(a.length - b.length))
   }
 
@@ -122,11 +114,12 @@ export default function Home() {
           </div>
         ) : (
           <div className={styles.cardsGrid}>
-            {filtered.map((entry) => (
+            {filtered.map((entry, index) => (
               <Link
                 key={entry.id}
                 href={`/entry/${entry.id}`}
                 className={styles.card}
+                style={{ '--index': index } as React.CSSProperties}
               >
                 <div className={styles.cardContent}>
                   <h2 className={styles.cardTitle}>
