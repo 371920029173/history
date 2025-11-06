@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/lib/supabase'
+import { getSupabaseAdmin } from '@/lib/supabase'
 import { verifyUploadKey } from '@/lib/crypto'
 
 export const runtime = 'edge'
@@ -7,13 +7,7 @@ export const runtime = 'edge'
 // GET: 获取所有历史记录
 export async function GET() {
   try {
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-      return NextResponse.json(
-        { error: 'Supabase configuration missing' },
-        { status: 500 }
-      )
-    }
-
+    const supabaseAdmin = getSupabaseAdmin()
     const { data, error } = await supabaseAdmin
       .from('history_entries')
       .select('*')
@@ -39,13 +33,7 @@ export async function GET() {
 // POST: 创建新的历史记录
 export async function POST(request: NextRequest) {
   try {
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-      return NextResponse.json(
-        { error: 'Supabase configuration missing' },
-        { status: 500 }
-      )
-    }
-
+    const supabaseAdmin = getSupabaseAdmin()
     const body = await request.json()
     const { key, title, description, content, image_url } = body
 

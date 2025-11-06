@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/lib/supabase'
+import { getSupabaseAdmin } from '@/lib/supabase'
 
 export const runtime = 'edge'
 
@@ -9,6 +9,7 @@ export async function GET() {
     const hasAnonKey = !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
     const hasServiceKey = !!process.env.SUPABASE_SERVICE_ROLE_KEY
 
+    const supabaseAdmin = getSupabaseAdmin()
     const testQuery = await supabaseAdmin
       .from('history_entries')
       .select('id')

@@ -1,18 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/lib/supabase'
-import { imagesBucket } from '@/lib/supabase'
+import { getSupabaseAdmin, imagesBucket } from '@/lib/supabase'
 
 export const runtime = 'edge'
 
 export async function POST(request: NextRequest) {
   try {
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-      return NextResponse.json(
-        { error: 'Supabase configuration missing' },
-        { status: 500 }
-      )
-    }
-
+    const supabaseAdmin = getSupabaseAdmin()
     const formData = await request.formData()
     const file = formData.get('file') as File
 
