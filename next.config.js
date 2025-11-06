@@ -9,6 +9,8 @@ const nextConfig = {
         hostname: '**.supabase.co',
       },
     ],
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 60,
   },
   webpack: (config, { isServer }) => {
     if (!isServer) {
@@ -45,11 +47,6 @@ const nextConfig = {
   },
   compress: true,
   poweredByHeader: false,
-  images: {
-    ...nextConfig.images,
-    formats: ['image/avif', 'image/webp'],
-    minimumCacheTTL: 60,
-  },
 }
 
 module.exports = nextConfig
