@@ -23,9 +23,8 @@ export default function CreatePage() {
     setError('')
     setSuccess(false)
 
-    // 验证至少有一个内容字段
     if (!title && !description && !content && !files?.length) {
-      setError('请至少填写一个字段（题目、介绍、内容或图片链接）')
+      setError('请至少填写一个字段（题目、介绍、内容或图片）')
       setSubmitting(false)
       return
     }
