@@ -54,16 +54,13 @@ export default function CreatePage() {
         }
       }
 
-      // 2) 自动生成缺省的标题/介绍
-      const autoTitle = title || (content ? content.substring(0, 20) : (uploadedUrls.length ? '图片集' : '无标题'))
-      // 不生成默认介绍，仅在用户填写时使用
+      const autoTitle = title || (content ? content.replace(/<[^>]*>?/gm, '').substring(0, 20) : (uploadedUrls.length ? '图片集' : '无标题'))
       const autoDesc = description || undefined
 
-      // 3) 将多图追加到内容里（保留用户输入的文字）；第一张作为封面 image_url
       let finalContent = content || ''
       if (uploadedUrls.length > 0) {
         const imgsHtml = uploadedUrls
-          .map((url) => `<p><img src=\"${url}\" alt=\"image\" /></p>`) // 简单插入
+          .map((url) => `<p><img src="${url}" alt="image" /></p>`)
           .join('')
         finalContent = `${finalContent}${imgsHtml}`
       }
@@ -92,7 +89,6 @@ export default function CreatePage() {
         setDescription('')
         setContent('')
         setFiles(null)
-        // 3秒后跳转到首页
         setTimeout(() => {
           router.push('/')
         }, 2000)
