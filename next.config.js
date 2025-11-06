@@ -48,6 +48,15 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['@supabase/supabase-js'],
   },
+  // 优化性能
+  compress: true, // 启用 gzip 压缩
+  poweredByHeader: false, // 移除 X-Powered-By 头
+  // 优化图片加载
+  images: {
+    ...nextConfig.images,
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 60,
+  },
 }
 
 module.exports = nextConfig

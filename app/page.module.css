@@ -19,13 +19,13 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 60vh; /* 减小高度，不占满整个页面 */
+  height: 450px; /* 固定高度 450px */
   background-image: url('/background.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  opacity: 0.4; /* 提高可见度 */
-  animation: fadeIn 2s ease-in;
+  opacity: 0.85; /* 饱和度 85% */
+  animation: fadeIn 1s ease-in;
   /* 渐变消失效果 - 从底部渐渐变淡 */
   mask-image: linear-gradient(
     to bottom,
@@ -39,6 +39,9 @@
     rgba(0, 0, 0, 0.8) 50%,
     rgba(0, 0, 0, 0) 100%
   );
+  /* 优化加载性能 */
+  will-change: opacity;
+  transform: translateZ(0);
 }
 
 .backgroundOverlay {
@@ -46,14 +49,16 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 60vh; /* 与背景图片高度一致 */
+  height: 450px; /* 与背景图片高度一致 */
   background: linear-gradient(
     to bottom,
-    rgba(255, 255, 255, 0.6) 0%,
-    rgba(255, 255, 255, 0.7) 50%,
-    rgba(255, 255, 255, 0.9) 100%
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0.6) 100%
   );
   z-index: 1;
+  will-change: opacity;
+  transform: translateZ(0);
 }
 
 @keyframes fadeIn {
@@ -61,7 +66,7 @@
     opacity: 0;
   }
   to {
-    opacity: 0.4;
+    opacity: 0.85;
   }
 }
 

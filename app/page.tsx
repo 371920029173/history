@@ -1,9 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo, Suspense } from 'react'
 import Link from 'next/link'
 import { HistoryEntry } from '@/lib/types'
 import styles from './page.module.css'
+
+// 使用 React.lazy 进行代码分割（如果需要）
+// const LazyComponent = React.lazy(() => import('./SomeComponent'))
 
 export default function Home() {
   const [entries, setEntries] = useState<HistoryEntry[]>([])
@@ -11,18 +14,40 @@ export default function Home() {
   const [query, setQuery] = useState('')
 
   useEffect(() => {
-    fetchEntries()
+    // 使用 requestIdleCallback 优化加载时机（如果支持）
+    const fetchData = () => {
+      fetchEntries()
+    }
+    
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(fetchData, { timeout: 2000 })
+    } else {
+      // 降级方案：使用 setTimeout
+      setTimeout(fetchData, 0)
+    }
   }, [])
 
   const fetchEntries = async () => {
     try {
-      const response = await fetch('/api/entries')
+      // 使用 AbortController 优化请求
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 10000) // 10秒超时
+      
+      const response = await fetch('/api/entries', {
+        signal: controller.signal,
+        // 添加缓存头
+        cache: 'default',
+      })
+      
+      clearTimeout(timeoutId)
       const result = await response.json()
       if (result.data) {
         setEntries(result.data)
       }
     } catch (error) {
-      console.error('Error fetching entries:', error)
+      if (error instanceof Error && error.name !== 'AbortError') {
+        console.error('Error fetching entries:', error)
+      }
     } finally {
       setLoading(false)
     }
