@@ -125,6 +125,16 @@
   font-size: 1rem;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: inputSlideIn 0.6s ease-out 0.1s backwards;
+}
+
+.searchInput:focus {
+  border-color: #667eea;
+  outline: none;
+  transform: scale(1.02);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  background: rgba(255, 255, 255, 1);
 }
 
 .communityRow {
