@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import { verifyDeleteKey } from '@/lib/crypto'
 
 export const runtime = 'edge'
+
+const DELETE_KEY = 'ssfz2027371920029173'
+
+function verifyDeleteKey(inputKey: string): boolean {
+  return inputKey === DELETE_KEY
+}
 
 function getSupabaseAdmin() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL

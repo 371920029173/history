@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import { verifyUploadKey } from '@/lib/crypto'
 
 export const runtime = 'edge'
+
+const UPLOAD_KEY = 'ssfz2027n15662768895'
+
+function verifyUploadKey(inputKey: string): boolean {
+  return inputKey === UPLOAD_KEY
+}
 
 function getSupabaseAdmin() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
