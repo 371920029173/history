@@ -40,6 +40,9 @@ export async function GET() {
     let supabase
     try {
       supabase = createClient(supabaseUrl, serviceKey, {
+        global: {
+          fetch: fetch,
+        },
         auth: {
           autoRefreshToken: false,
           persistSession: false,

@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
 
 export const runtime = 'edge'
 
@@ -23,8 +22,9 @@ function verifyUploadKey(inputKey: string): boolean {
   return true
 }
 
-function getSupabaseAdmin() {
+async function getSupabaseAdmin() {
   try {
+    const { createClient } = await import('@supabase/supabase-js')
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL
     const key = process.env.SUPABASE_SERVICE_ROLE_KEY
 
@@ -33,6 +33,9 @@ function getSupabaseAdmin() {
     }
 
     return createClient(url, key.trim(), {
+      global: {
+        fetch: fetch,
+      },
       auth: {
         autoRefreshToken: false,
         persistSession: false,
@@ -47,7 +50,7 @@ function getSupabaseAdmin() {
 // GET: 获取所有历史记录
 export async function GET() {
   try {
-    const supabaseAdmin = getSupabaseAdmin()
+    const supabaseAdmin = await getSupabaseAdmin()
     if (!supabaseAdmin) {
       return NextResponse.json(
         { error: 'Service unavailable', code: 'E000' },
@@ -90,7 +93,7 @@ export async function GET() {
 // POST: 创建新的历史记录
 export async function POST(request: NextRequest) {
   try {
-    const supabaseAdmin = getSupabaseAdmin()
+    const supabaseAdmin = await getSupabaseAdmin()
     if (!supabaseAdmin) {
       return NextResponse.json(
         { error: 'Service unavailable', code: 'E000' },
