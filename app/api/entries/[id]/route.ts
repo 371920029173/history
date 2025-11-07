@@ -5,8 +5,28 @@ export const runtime = 'edge'
 
 const DELETE_KEY = 'ssfz2027371920029173'
 
-function verifyDeleteKey(inputKey: string): boolean {
-  return inputKey === DELETE_KEY
+function verifyDeleteKey(inputKey: string, timestamp?: number): boolean {
+  if (!inputKey || typeof inputKey !== 'string') return false
+  
+  const key = inputKey.trim()
+  if (key.length !== DELETE_KEY.length) return false
+  
+  const parts = DELETE_KEY.split('')
+  const inputParts = key.split('')
+  
+  if (parts.length !== inputParts.length) return false
+  
+  for (let i = 0; i < parts.length; i++) {
+    if (parts[i] !== inputParts[i]) return false
+  }
+  
+  if (timestamp) {
+    const now = Date.now()
+    const diff = Math.abs(now - timestamp)
+    if (diff > 300000) return false
+  }
+  
+  return true
 }
 
 function getSupabaseAdmin() {
@@ -42,16 +62,16 @@ export async function GET(
 
     if (error) {
       return NextResponse.json(
-        { error: 'Entry not found', details: error.message },
+        { error: 'Entry not found', code: 'D003', details: error.message },
         { status: 404 }
       )
     }
 
-    return NextResponse.json({ data })
+    return NextResponse.json({ data, ts: Date.now() })
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     return NextResponse.json(
-      { error: 'Internal server error', details: errorMessage },
+      { error: 'Internal server error', code: 'D004', details: errorMessage },
       { status: 500 }
     )
   }
@@ -66,11 +86,18 @@ export async function DELETE(
     const supabaseAdmin = getSupabaseAdmin()
     const { id } = await params
     const body = await request.json()
-    const { key } = body
+    const { key, ts } = body
 
-    if (!key || !verifyDeleteKey(key)) {
+    if (!key || typeof key !== 'string') {
       return NextResponse.json(
-        { error: 'Invalid delete key' },
+        { error: 'Invalid request format', code: 'D001' },
+        { status: 400 }
+      )
+    }
+
+    if (!verifyDeleteKey(key, ts)) {
+      return NextResponse.json(
+        { error: 'Authentication failed', code: 'D002' },
         { status: 401 }
       )
     }
@@ -82,16 +109,20 @@ export async function DELETE(
 
     if (error) {
       return NextResponse.json(
-        { error: 'Failed to delete entry', details: error.message },
+        { error: 'Failed to delete entry', code: 'D005', details: error.message },
         { status: 500 }
       )
     }
 
-    return NextResponse.json({ message: 'Entry deleted successfully' })
+    return NextResponse.json({ 
+      success: true, 
+      message: 'Entry deleted successfully',
+      ts: Date.now()
+    })
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     return NextResponse.json(
-      { error: 'Internal server error', details: errorMessage },
+      { error: 'Internal server error', code: 'D006', details: errorMessage },
       { status: 500 }
     )
   }

@@ -5,8 +5,28 @@ export const runtime = 'edge'
 
 const UPLOAD_KEY = 'ssfz2027n15662768895'
 
-function verifyUploadKey(inputKey: string): boolean {
-  return inputKey === UPLOAD_KEY
+function verifyUploadKey(inputKey: string, timestamp?: number): boolean {
+  if (!inputKey || typeof inputKey !== 'string') return false
+  
+  const key = inputKey.trim()
+  if (key.length !== UPLOAD_KEY.length) return false
+  
+  const parts = UPLOAD_KEY.split('')
+  const inputParts = key.split('')
+  
+  if (parts.length !== inputParts.length) return false
+  
+  for (let i = 0; i < parts.length; i++) {
+    if (parts[i] !== inputParts[i]) return false
+  }
+  
+  if (timestamp) {
+    const now = Date.now()
+    const diff = Math.abs(now - timestamp)
+    if (diff > 300000) return false
+  }
+  
+  return true
 }
 
 function getSupabaseAdmin() {
@@ -37,16 +57,16 @@ export async function GET() {
 
     if (error) {
       return NextResponse.json(
-        { error: 'Failed to fetch entries', details: error.message },
+        { error: 'Failed to fetch entries', code: 'E003', details: error.message },
         { status: 500 }
       )
     }
 
-    return NextResponse.json({ data })
+    return NextResponse.json({ data, ts: Date.now() })
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     return NextResponse.json(
-      { error: 'Internal server error', details: errorMessage },
+      { error: 'Internal server error', code: 'E004', details: errorMessage },
       { status: 500 }
     )
   }
@@ -57,18 +77,32 @@ export async function POST(request: NextRequest) {
   try {
     const supabaseAdmin = getSupabaseAdmin()
     const body = await request.json()
-    const { key, title, description, content, image_url } = body
+    const { key, title, description, content, image_url, ts } = body
 
-    if (!key || !verifyUploadKey(key)) {
+    if (!key || typeof key !== 'string') {
       return NextResponse.json(
-        { error: 'Invalid upload key' },
+        { error: 'Invalid request format', code: 'E001' },
+        { status: 400 }
+      )
+    }
+
+    if (!verifyUploadKey(key, ts)) {
+      return NextResponse.json(
+        { error: 'Authentication failed', code: 'E002' },
         { status: 401 }
       )
     }
 
     if (!title && !description && !content && !image_url) {
       return NextResponse.json(
-        { error: 'At least one field (title, description, content, or image_url) is required' },
+        { error: 'At least one field is required', code: 'E005' },
+        { status: 400 }
+      )
+    }
+
+    if (content && typeof content === 'string' && content.length > 100000) {
+      return NextResponse.json(
+        { error: 'Content too long', code: 'E006' },
         { status: 400 }
       )
     }
@@ -88,16 +122,21 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       return NextResponse.json(
-        { error: 'Failed to create entry', details: error.message },
+        { error: 'Failed to create entry', code: 'E007', details: error.message },
         { status: 500 }
       )
     }
 
-    return NextResponse.json({ data, message: 'Entry created successfully' })
+    return NextResponse.json({ 
+      success: true, 
+      data, 
+      message: 'Entry created successfully',
+      ts: Date.now()
+    })
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     return NextResponse.json(
-      { error: 'Internal server error', details: errorMessage },
+      { error: 'Internal server error', code: 'E008', details: errorMessage },
       { status: 500 }
     )
   }
