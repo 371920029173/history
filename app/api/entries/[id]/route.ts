@@ -51,6 +51,13 @@ export async function GET(
 ) {
   try {
     const supabaseAdmin = getSupabaseAdmin()
+    if (!supabaseAdmin) {
+      return NextResponse.json(
+        { error: 'Service unavailable', code: 'D000' },
+        { status: 503 }
+      )
+    }
+
     const { id } = await params
     const { data, error } = await supabaseAdmin
       .from('history_entries')
@@ -60,7 +67,7 @@ export async function GET(
 
     if (error) {
       return NextResponse.json(
-        { error: 'Entry not found', code: 'D003', details: error.message },
+        { error: 'Entry not found', code: 'D005', details: error.message },
         { status: 404 }
       )
     }
@@ -69,7 +76,7 @@ export async function GET(
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     return NextResponse.json(
-      { error: 'Internal server error', code: 'D004', details: errorMessage },
+      { error: 'Internal server error', code: 'D007', details: errorMessage },
       { status: 500 }
     )
   }
@@ -90,31 +97,51 @@ export async function DELETE(
     }
     
     const { id } = await params
-    const body = await request.json()
+    
+    let body
+    try {
+      body = await request.json()
+    } catch (parseError) {
+      return NextResponse.json(
+        { error: 'Invalid JSON in request body', code: 'D001' },
+        { status: 400 }
+      )
+    }
+    
     const { key } = body
 
     if (!key || typeof key !== 'string') {
       return NextResponse.json(
-        { error: 'Invalid request format', code: 'D001' },
+        { error: 'Invalid request format', code: 'D002' },
         { status: 400 }
       )
     }
 
     if (!verifyDeleteKey(key)) {
       return NextResponse.json(
-        { error: 'Authentication failed', code: 'D002' },
+        { error: 'Authentication failed', code: 'D003' },
         { status: 401 }
       )
     }
 
-    const { error } = await supabaseAdmin
-      .from('history_entries')
-      .delete()
-      .eq('id', id)
+    let deleteResult
+    try {
+      deleteResult = await supabaseAdmin
+        .from('history_entries')
+        .delete()
+        .eq('id', id)
+    } catch (dbError) {
+      return NextResponse.json(
+        { error: 'Database operation failed', code: 'D004', details: dbError instanceof Error ? dbError.message : 'Unknown error' },
+        { status: 500 }
+      )
+    }
+
+    const { error } = deleteResult
 
     if (error) {
       return NextResponse.json(
-        { error: 'Failed to delete entry', code: 'D005', details: error.message },
+        { error: 'Failed to delete entry', code: 'D006', details: error.message },
         { status: 500 }
       )
     }
@@ -126,7 +153,7 @@ export async function DELETE(
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     return NextResponse.json(
-      { error: 'Internal server error', code: 'D006', details: errorMessage },
+      { error: 'Internal server error', code: 'D008', details: errorMessage },
       { status: 500 }
     )
   }
