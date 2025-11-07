@@ -5,7 +5,7 @@ export const runtime = 'edge'
 
 const UPLOAD_KEY = 'ssfz2027n15662768895'
 
-function verifyUploadKey(inputKey: string, timestamp?: number): boolean {
+function verifyUploadKey(inputKey: string): boolean {
   if (!inputKey || typeof inputKey !== 'string') return false
   
   const key = inputKey.trim()
@@ -18,12 +18,6 @@ function verifyUploadKey(inputKey: string, timestamp?: number): boolean {
   
   for (let i = 0; i < parts.length; i++) {
     if (parts[i] !== inputParts[i]) return false
-  }
-  
-  if (timestamp) {
-    const now = Date.now()
-    const diff = Math.abs(now - timestamp)
-    if (diff > 300000) return false
   }
   
   return true
@@ -77,7 +71,7 @@ export async function POST(request: NextRequest) {
   try {
     const supabaseAdmin = getSupabaseAdmin()
     const body = await request.json()
-    const { key, title, description, content, image_url, ts } = body
+    const { key, title, description, content, image_url } = body
 
     if (!key || typeof key !== 'string') {
       return NextResponse.json(
@@ -86,7 +80,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    if (!verifyUploadKey(key, ts)) {
+    if (!verifyUploadKey(key)) {
       return NextResponse.json(
         { error: 'Authentication failed', code: 'E002' },
         { status: 401 }
@@ -96,13 +90,6 @@ export async function POST(request: NextRequest) {
     if (!title && !description && !content && !image_url) {
       return NextResponse.json(
         { error: 'At least one field is required', code: 'E005' },
-        { status: 400 }
-      )
-    }
-
-    if (content && typeof content === 'string' && content.length > 100000) {
-      return NextResponse.json(
-        { error: 'Content too long', code: 'E006' },
         { status: 400 }
       )
     }

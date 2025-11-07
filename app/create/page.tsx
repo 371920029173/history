@@ -76,7 +76,6 @@ export default function CreatePage() {
           description: autoDesc || undefined,
           content: finalContent || undefined,
           image_url: uploadedUrls[0] || undefined,
-          ts: Date.now(),
         }),
       })
 

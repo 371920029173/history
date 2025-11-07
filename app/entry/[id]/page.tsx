@@ -50,7 +50,7 @@ export default function EntryPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ key: deleteKey, ts: Date.now() }),
+        body: JSON.stringify({ key: deleteKey }),
       })
 
       const result = await response.json()

@@ -5,7 +5,7 @@ export const runtime = 'edge'
 
 const DELETE_KEY = 'ssfz2027371920029173'
 
-function verifyDeleteKey(inputKey: string, timestamp?: number): boolean {
+function verifyDeleteKey(inputKey: string): boolean {
   if (!inputKey || typeof inputKey !== 'string') return false
   
   const key = inputKey.trim()
@@ -18,12 +18,6 @@ function verifyDeleteKey(inputKey: string, timestamp?: number): boolean {
   
   for (let i = 0; i < parts.length; i++) {
     if (parts[i] !== inputParts[i]) return false
-  }
-  
-  if (timestamp) {
-    const now = Date.now()
-    const diff = Math.abs(now - timestamp)
-    if (diff > 300000) return false
   }
   
   return true
@@ -86,7 +80,7 @@ export async function DELETE(
     const supabaseAdmin = getSupabaseAdmin()
     const { id } = await params
     const body = await request.json()
-    const { key, ts } = body
+    const { key } = body
 
     if (!key || typeof key !== 'string') {
       return NextResponse.json(
@@ -95,7 +89,7 @@ export async function DELETE(
       )
     }
 
-    if (!verifyDeleteKey(key, ts)) {
+    if (!verifyDeleteKey(key)) {
       return NextResponse.json(
         { error: 'Authentication failed', code: 'D002' },
         { status: 401 }
