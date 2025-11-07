@@ -13,17 +13,28 @@ export default function EdgeDebugPage() {
         const res = await fetch('/api/edge-debug', { cache: 'no-store' })
         const text = await res.text()
 
+        setData({
+          status: res.status,
+          statusText: res.statusText,
+          headers: Object.fromEntries(res.headers.entries()),
+          rawResponse: text,
+          responseLength: text.length,
+        })
+
         try {
           const json = JSON.parse(text)
-          setData(json)
+          setData((prev) => ({ ...prev, parsedJson: json }))
           if (!res.ok) {
             setError(json.error ? String(json.error) : `Request failed with status ${res.status}`)
           }
         } catch (parseError) {
-          setError(`Failed to parse response: ${text}`)
+          setError(`Failed to parse response as JSON. Status: ${res.status}. Raw: ${text.substring(0, 500)}`)
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : String(err))
+        setData({
+          fetchError: err instanceof Error ? err.message : String(err),
+        })
       } finally {
         setLoading(false)
       }
