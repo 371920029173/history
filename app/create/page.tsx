@@ -79,12 +79,23 @@ export default function CreatePage() {
         }),
       })
 
-      const result = await response.json()
+      if (!response.ok) {
+        const errorText = await response.text()
+        let errorData
+        try {
+          errorData = JSON.parse(errorText)
+        } catch {
+          errorData = { error: '创建失败，请稍后重试' }
+        }
+        setError(errorData.error || '创建失败')
+        setUploadKey('')
+        return
+      }
 
-      if (response.ok) {
+      const result = await response.json()
+      if (result.success) {
         setSuccess(true)
-        setUploadKey('') // 清除密钥
-        // 清空表单
+        setUploadKey('')
         setTitle('')
         setDescription('')
         setContent('')
@@ -94,7 +105,7 @@ export default function CreatePage() {
         }, 2000)
       } else {
         setError(result.error || '创建失败')
-        setUploadKey('') // 清除密钥
+        setUploadKey('')
       }
     } catch (error) {
       console.error('Error creating entry:', error)

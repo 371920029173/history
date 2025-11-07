@@ -10,21 +10,32 @@ function getSupabaseAdmin() {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY
 
   if (!url || !key) {
-    throw new Error('Supabase环境变量未配置')
+    return null
   }
 
-  return createClient(url, key.trim(), {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-      detectSessionInUrl: false
-    }
-  })
+  try {
+    return createClient(url, key.trim(), {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+        detectSessionInUrl: false
+      }
+    })
+  } catch (error) {
+    return null
+  }
 }
 
 export async function POST(request: NextRequest) {
   try {
     const supabaseAdmin = getSupabaseAdmin()
+    if (!supabaseAdmin) {
+      return NextResponse.json(
+        { error: 'Service unavailable', code: 'U000' },
+        { status: 503 }
+      )
+    }
+    
     const formData = await request.formData()
     const file = formData.get('file') as File
 

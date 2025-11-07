@@ -31,10 +31,23 @@ export default function Home() {
         signal: controller.signal,
         cache: 'default',
       })
-      
+
       clearTimeout(timeoutId)
+      
+      if (!response.ok) {
+        const errorText = await response.text()
+        let errorData
+        try {
+          errorData = JSON.parse(errorText)
+        } catch {
+          errorData = { error: 'Failed to fetch entries', details: errorText }
+        }
+        console.error('Error fetching entries:', errorData)
+        return
+      }
+      
       const result = await response.json()
-      if (result.data) {
+      if (result && result.data) {
         setEntries(result.data)
       }
     } catch (error) {

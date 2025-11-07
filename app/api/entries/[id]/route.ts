@@ -28,16 +28,20 @@ function getSupabaseAdmin() {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY
 
   if (!url || !key) {
-    throw new Error('Supabase环境变量未配置')
+    return null
   }
 
-  return createClient(url, key.trim(), {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-      detectSessionInUrl: false
-    }
-  })
+  try {
+    return createClient(url, key.trim(), {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+        detectSessionInUrl: false
+      }
+    })
+  } catch (error) {
+    return null
+  }
 }
 
 // GET: 获取单个历史记录
@@ -61,7 +65,7 @@ export async function GET(
       )
     }
 
-    return NextResponse.json({ data, ts: Date.now() })
+    return NextResponse.json({ data })
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     return NextResponse.json(
@@ -78,6 +82,13 @@ export async function DELETE(
 ) {
   try {
     const supabaseAdmin = getSupabaseAdmin()
+    if (!supabaseAdmin) {
+      return NextResponse.json(
+        { error: 'Service unavailable', code: 'D000' },
+        { status: 503 }
+      )
+    }
+    
     const { id } = await params
     const body = await request.json()
     const { key } = body
@@ -110,8 +121,7 @@ export async function DELETE(
 
     return NextResponse.json({ 
       success: true, 
-      message: 'Entry deleted successfully',
-      ts: Date.now()
+      message: 'Entry deleted successfully'
     })
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'

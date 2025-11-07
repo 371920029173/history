@@ -44,6 +44,13 @@ function getSupabaseAdmin() {
 export async function GET() {
   try {
     const supabaseAdmin = getSupabaseAdmin()
+    if (!supabaseAdmin) {
+      return NextResponse.json(
+        { error: 'Service unavailable', code: 'E000' },
+        { status: 503 }
+      )
+    }
+    
     const { data, error } = await supabaseAdmin
       .from('history_entries')
       .select('*')
@@ -56,7 +63,7 @@ export async function GET() {
       )
     }
 
-    return NextResponse.json({ data, ts: Date.now() })
+    return NextResponse.json({ data: data || [] })
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     return NextResponse.json(
@@ -70,6 +77,13 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const supabaseAdmin = getSupabaseAdmin()
+    if (!supabaseAdmin) {
+      return NextResponse.json(
+        { error: 'Service unavailable', code: 'E000' },
+        { status: 503 }
+      )
+    }
+    
     const body = await request.json()
     const { key, title, description, content, image_url } = body
 
@@ -117,8 +131,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ 
       success: true, 
       data, 
-      message: 'Entry created successfully',
-      ts: Date.now()
+      message: 'Entry created successfully'
     })
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'

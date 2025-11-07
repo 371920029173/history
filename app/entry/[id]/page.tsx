@@ -25,8 +25,21 @@ export default function EntryPage() {
   const fetchEntry = async (id: string) => {
     try {
       const response = await fetch(`/api/entries/${id}`)
+      
+      if (!response.ok) {
+        const errorText = await response.text()
+        let errorData
+        try {
+          errorData = JSON.parse(errorText)
+        } catch {
+          errorData = { error: '加载失败' }
+        }
+        setError(errorData.error || '记录不存在')
+        return
+      }
+      
       const result = await response.json()
-      if (result.data) {
+      if (result && result.data) {
         setEntry(result.data)
       } else {
         setError('记录不存在')
@@ -53,13 +66,25 @@ export default function EntryPage() {
         body: JSON.stringify({ key: deleteKey }),
       })
 
-      const result = await response.json()
+      if (!response.ok) {
+        const errorText = await response.text()
+        let errorData
+        try {
+          errorData = JSON.parse(errorText)
+        } catch {
+          errorData = { error: '删除失败' }
+        }
+        setError(errorData.error || '删除失败')
+        setDeleteKey('')
+        return
+      }
 
-      if (response.ok) {
+      const result = await response.json()
+      if (result.success) {
         router.push('/')
       } else {
         setError(result.error || '删除失败')
-        setDeleteKey('') // 清除密钥
+        setDeleteKey('')
       }
     } catch (error) {
       console.error('Error deleting entry:', error)
