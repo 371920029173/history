@@ -4,6 +4,8 @@ import { join } from 'path';
 import { existsSync } from 'fs';
 import { verifyKey } from '@/lib/auth';
 
+export const dynamic = 'force-static';
+
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();

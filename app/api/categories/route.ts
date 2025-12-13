@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getAllCategories } from '@/lib/storage';
 
+export const dynamic = 'force-static';
+
 // GET - 获取所有类别
 export async function GET() {
   try {

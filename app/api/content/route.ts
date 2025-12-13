@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAllContent, saveContent, deleteContent } from '@/lib/storage';
 import { verifyKey } from '@/lib/auth';
 
+export const dynamic = 'force-static';
+
 // GET - 获取所有内容
 export async function GET() {
   try {
