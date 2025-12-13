@@ -176,7 +176,7 @@ export default function CreatePage() {
         alert('保存成功！');
         // 清除密钥
         setUploadKey('');
-        router.push(`/content/${data.data.id}`);
+        router.push(`/content?id=${data.data.id}`);
       } else {
         alert(data.error || '保存失败');
       }

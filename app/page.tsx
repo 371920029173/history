@@ -152,7 +152,7 @@ export default function HomePage() {
             <div
               key={item.id}
               className={styles.contentCard}
-              onClick={() => router.push(`/content/${item.id}`)}
+              onClick={() => router.push(`/content?id=${item.id}`)}
             >
               {item.mediaFiles && item.mediaFiles.length > 0 && (
                 <div className={styles.cardImage}>
