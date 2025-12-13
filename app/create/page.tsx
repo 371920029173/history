@@ -311,7 +311,7 @@ export default function CreatePage() {
                       min="12"
                       max="72"
                       value={selectedBlockData.style?.fontSize || 16}
-                      onChange={(e) => updateBlock(selectedBlock, {
+                      onChange={(e) => updateBlock(selectedBlock!, {
                         style: {
                           ...selectedBlockData.style,
                           fontSize: parseInt(e.target.value) || 16,
@@ -325,7 +325,7 @@ export default function CreatePage() {
                       className={`${styles.formatButton} ${
                         selectedBlockData.style?.fontWeight === 'bold' ? styles.active : ''
                       }`}
-                      onClick={() => updateBlock(selectedBlock, {
+                      onClick={() => updateBlock(selectedBlock!, {
                         style: {
                           ...selectedBlockData.style,
                           fontWeight: selectedBlockData.style?.fontWeight === 'bold' ? 'normal' : 'bold',
@@ -338,7 +338,7 @@ export default function CreatePage() {
                       className={`${styles.formatButton} ${
                         selectedBlockData.style?.fontStyle === 'italic' ? styles.active : ''
                       }`}
-                      onClick={() => updateBlock(selectedBlock, {
+                      onClick={() => updateBlock(selectedBlock!, {
                         style: {
                           ...selectedBlockData.style,
                           fontStyle: selectedBlockData.style?.fontStyle === 'italic' ? 'normal' : 'italic',
@@ -351,7 +351,7 @@ export default function CreatePage() {
                       className={`${styles.formatButton} ${
                         selectedBlockData.style?.textDecoration === 'underline' ? styles.active : ''
                       }`}
-                      onClick={() => updateBlock(selectedBlock, {
+                      onClick={() => updateBlock(selectedBlock!, {
                         style: {
                           ...selectedBlockData.style,
                           textDecoration: selectedBlockData.style?.textDecoration === 'underline' ? 'none' : 'underline',
@@ -364,7 +364,7 @@ export default function CreatePage() {
                       className={`${styles.formatButton} ${
                         selectedBlockData.style?.textDecoration === 'line-through' ? styles.active : ''
                       }`}
-                      onClick={() => updateBlock(selectedBlock, {
+                      onClick={() => updateBlock(selectedBlock!, {
                         style: {
                           ...selectedBlockData.style,
                           textDecoration: selectedBlockData.style?.textDecoration === 'line-through' ? 'none' : 'line-through',
@@ -378,7 +378,7 @@ export default function CreatePage() {
                     <label>对齐:</label>
                     <select
                       value={selectedBlockData.style?.textAlign || 'left'}
-                      onChange={(e) => updateBlock(selectedBlock, {
+                      onChange={(e) => updateBlock(selectedBlock!, {
                         style: {
                           ...selectedBlockData.style,
                           textAlign: e.target.value as any,
@@ -396,7 +396,7 @@ export default function CreatePage() {
                     <input
                       type="color"
                       value={selectedBlockData.style?.color || '#000000'}
-                      onChange={(e) => updateBlock(selectedBlock, {
+                      onChange={(e) => updateBlock(selectedBlock!, {
                         style: {
                           ...selectedBlockData.style,
                           color: e.target.value,
@@ -409,7 +409,7 @@ export default function CreatePage() {
               )}
               <button
                 className={styles.deleteButton}
-                onClick={() => deleteBlock(selectedBlock)}
+                onClick={() => selectedBlock && deleteBlock(selectedBlock)}
               >
                 删除此块
               </button>
