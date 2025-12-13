@@ -1,0 +1,19 @@
+# Cloudflare Workers/Pages 配置文件
+# 如果使用 Cloudflare Pages，此文件可选
+
+name = "yiban-history"
+compatibility_date = "2024-01-01"
+
+# 如果需要使用 KV
+# [[kv_namespaces]]
+# binding = "CONTENT_STORE"
+# id = "your-kv-namespace-id"
+
+# 如果需要使用 D1 数据库
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "yiban-history-db"
+# database_id = "your-database-id"
+
+
+

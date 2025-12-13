@@ -1,0 +1,236 @@
+.container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.heroBackground {
+  position: relative;
+  width: 100%;
+  height: 350px;
+  /* 渐变背景作为后备 */
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  /* 如果存在背景图片，会覆盖渐变背景 */
+  background-image: url('/background.jpg');
+  background-size: cover;
+  background-position: center;
+  filter: saturate(100%);
+  overflow: hidden;
+}
+
+.heroOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.3) 100%);
+}
+
+.heroTitle {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-size: 48px;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+.mainContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.searchSection {
+  margin-bottom: 40px;
+}
+
+.searchBox {
+  margin-bottom: 30px;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 15px 20px;
+  font-size: 16px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  transition: border-color 0.3s;
+}
+
+.searchInput:focus {
+  border-color: #4a90e2;
+  outline: none;
+}
+
+.categorySection {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.categorySearchBox {
+  margin-bottom: 15px;
+}
+
+.categorySearchInput {
+  width: 100%;
+  padding: 10px 15px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.categoryTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.categoryTag {
+  padding: 8px 16px;
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  font-size: 14px;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.categoryTag:hover {
+  background: #e0e0e0;
+}
+
+.categoryTag.active {
+  background: #4a90e2;
+  color: white;
+  border-color: #4a90e2;
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.contentCard {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.contentCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+}
+
+.cardImage {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+
+.cardImageImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cardContent {
+  padding: 20px;
+}
+
+.cardCategory {
+  display: inline-block;
+  padding: 4px 12px;
+  background: #e8f4f8;
+  color: #4a90e2;
+  border-radius: 12px;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
+.cardTitle {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.cardSubtitle {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 12px;
+  font-weight: normal;
+}
+
+.cardPreview {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cardDate {
+  font-size: 12px;
+  color: #999;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+  font-size: 18px;
+}
+
+.createButton {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #4a90e2;
+  color: white;
+  font-size: 32px;
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.4);
+  transition: all 0.3s;
+  z-index: 100;
+}
+
+.createButton:hover {
+  background: #357abd;
+  transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+  .heroTitle {
+    font-size: 32px;
+  }
+
+  .contentGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .createButton {
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    font-size: 28px;
+  }
+}
+
